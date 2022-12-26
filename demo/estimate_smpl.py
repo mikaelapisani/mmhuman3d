@@ -182,8 +182,7 @@ def single_person_with_mmdet(args, frames_iter):
                     bbox_thr=args.bbox_thr,
                     format='xyxy')
         else:
-            raise Exception(
-                f'{mesh_model.cfg.model.type} is not supported yet')
+            raise Exception(f'{mesh_model.cfg.model.type} is not supported yet')
 
         smpl_betas.append(mesh_results[0]['smpl_beta'])
         smpl_pose = mesh_results[0]['smpl_pose']

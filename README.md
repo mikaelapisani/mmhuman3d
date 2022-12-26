@@ -178,3 +178,24 @@ We wish that the toolbox and benchmark could serve the growing research communit
 - [MMSelfSup](https://github.com/open-mmlab/mmselfsup): OpenMMLab self-supervised learning toolbox and benchmark.
 - [MMRazor](https://github.com/open-mmlab/mmrazor): OpenMMLab model compression toolbox and benchmark.
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab model deployment framework.
+
+
+
+# MODIFICATION
+Modified file [estimate_smpl.py](https://github.com/mikaelapisani/mmhuman3d/blob/main/demo/estimate_smpl.py) in order to support generate frames without the original image as background and keep only the body shape with a black background. 
+
+Added —background option. If set to ‘black’ the result images will be with black background.
+
+Example:
+```bash 
+  python demo/estimate_smpl.py \
+  configs/hmr/resnet50_hmr_pw3d.py \ 
+  data/checkpoints/resnet50_hmr_pw3d.pth \
+  --multi_person_demo \
+  --tracking_config demo/mmtracking_cfg/deepsort_faster-rcnn_fpn_4e_mot17-private-half.py \
+  --input_path /home/ec2-user/fight-detection-surv-dataset/fight/fi001.mp4 \
+  --show_path vis_results/ \
+  --background black \
+  --smooth_type savgol \
+  --render_choice part_silhouette
+```
