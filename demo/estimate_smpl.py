@@ -276,6 +276,14 @@ def single_person_with_mmdet(args, frames_iter):
                 output_folder=frames_folder)
 
         body_model_config = dict(model_path=args.body_model_dir, type='smpl')
+        
+        set_origin_frames;
+        if args.background=='black':
+            set_origin_frames = np.zeros((len(os.listdir(frames_folder)), 1920, 1080, 3), dtype = np.uint8)
+            set_origin_frames = set_origin_frames*255
+        else:
+            set_origin_frames = frames_folder
+        
         visualize_smpl_hmr(
             poses=smpl_poses.reshape(-1, 24 * 3),
             betas=smpl_betas,
@@ -467,6 +475,14 @@ def multi_person_with_mmtracking(args, frames_iter):
                 np.array(frames_iter)[frame_id_list],
                 output_folder=frames_folder)
         body_model_config = dict(model_path=args.body_model_dir, type='smpl')
+        
+        set_origin_frames;
+        if args.background=='black':
+            set_origin_frames = np.zeros((len(os.listdir(frames_folder)), 1920, 1080, 3), dtype = np.uint8)
+            set_origin_frames = set_origin_frames*255
+        else:
+            set_origin_frames = frames_folder
+        
         visualize_smpl_hmr(
             poses=compressed_poses.reshape(-1, max_instance, 24 * 3),
             betas=compressed_betas,
@@ -475,7 +491,7 @@ def multi_person_with_mmtracking(args, frames_iter):
             output_path=args.show_path,
             render_choice=args.render_choice,
             resolution=frames_iter[0].shape[:2],
-            origin_frames=frames_folder,
+            origin_frames=set_origin_frames,
             body_model_config=body_model_config,
             overwrite=True,
             palette=args.palette,
@@ -579,6 +595,11 @@ if __name__ == '__main__':
         choices=['cpu', 'cuda'],
         default='cuda',
         help='device used for testing')
+    parser.add_argument(
+        '--background',
+        choices=['black', 'image'],
+        default='image',
+        help='Background of the results')
     args = parser.parse_args()
 
     if args.single_person_demo:
