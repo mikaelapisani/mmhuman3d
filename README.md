@@ -199,3 +199,39 @@ Example:
   --smooth_type savgol \
   --render_choice part_silhouette
 ```
+
+# Run on CPU
+```bash 
+python demo/estimate_smpl.py \
+       configs/hmr/resnet50_hmr_pw3d.py \ 
+       data/checkpoints/resnet50_hmr_pw3d.pth \
+       --single_person_demo \
+       --det_config demo/mmdetection_cfg/faster_rcnn_r50_fpn_coco.py \
+       --det_checkpoint https://download.openmmlab.com/mmdetection/v2.0/faster_rcnn/faster_rcnn_r50_fpn_1x_coco/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth \
+       --input_path demo/resources/single_person_demo.mp4 \
+       --show_path vis_results/single_person_demo.mp4 \
+       --output output/ \
+       --smooth_type savgol \
+       --device cpu
+```
+
+
+#create NGC account 
+docker login nvcr.io
+
+Username: $oauthtoken
+Password: bXZwY28xaGE4aGNlZHE4cDZ2NTZnMGE5YnA6NDhjY2NiYmQtY2E5Yi00ZWVlLWJlNzYtZjQwMzRiNmMxOTQy
+mkdir vis_results
+
+
+
+docker run --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -it --rm -v vis_results:/workspace/mmhuman3d/vis_results nvcr.io/nvidia/pytorch:22.08-py3_mmhuman3d python /workspace/mmhuman3d/demo/estimate_smpl.py \
+/workspace/mmhuman3d/configs/hmr/resnet50_hmr_pw3d.py \
+/workspace/mmhuman3d/data/checkpoints/resnet50_hmr_pw3d.pth \
+--single_person_demo \
+--det_config /workspace/mmhuman3d/demo/mmdetection_cfg/faster_rcnn_r50_fpn_coco.py \
+--det_checkpoint https://download.openmmlab.com/mmdetection/v2.0/faster_rcnn/faster_rcnn_r50_fpn_1x_coco/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth \
+--input_path /workspace/mmhuman3d/demo/resources/single_person_demo.mp4 \
+--show_path /workspace/mmhuman3d/vis_results/single_person_demo.mp4 \
+--output /workspace/mmhuman3d/output/ \
+--smooth_type savgol

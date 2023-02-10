@@ -182,7 +182,8 @@ def single_person_with_mmdet(args, frames_iter):
                     bbox_thr=args.bbox_thr,
                     format='xyxy')
         else:
-            raise Exception(f'{mesh_model.cfg.model.type} is not supported yet')
+            raise Exception(
+                f'{mesh_model.cfg.model.type} is not supported yet')
 
         smpl_betas.append(mesh_results[0]['smpl_beta'])
         smpl_pose = mesh_results[0]['smpl_pose']
@@ -275,28 +276,8 @@ def single_person_with_mmdet(args, frames_iter):
                 output_folder=frames_folder)
 
         body_model_config = dict(model_path=args.body_model_dir, type='smpl')
-        
-        if args.background=='black':
-            black_imgs = np.zeros((len(os.listdir(frames_folder)), 1920, 1080, 3), dtype = np.uint8)
-            black_imgs = black_imgs*255
-
-            print(args.device.lower())
-        
-            visualize_smpl_hmr(
-                poses=smpl_poses.reshape(-1, 24 * 3),
-                betas=smpl_betas,
-                cam_transl=pred_cams,
-                bbox=bboxes_xyxy,
-                output_path=args.show_path,
-                render_choice=args.render_choice,
-                resolution=frames_iter[0].shape[:2],
-                image_array=black_imgs,
-                body_model_config=body_model_config,
-                overwrite=True,
-                palette=args.palette,
-                read_frames_batch=True)
-        else:
-            visualize_smpl_hmr(
+    
+        visualize_smpl_hmr(
             poses=smpl_poses.reshape(-1, 24 * 3),
             betas=smpl_betas,
             cam_transl=pred_cams,
@@ -309,7 +290,6 @@ def single_person_with_mmdet(args, frames_iter):
             overwrite=True,
             palette=args.palette,
             read_frames_batch=True)
-            
         if args.output is None:
             shutil.rmtree(frames_folder)
 
@@ -488,26 +468,7 @@ def multi_person_with_mmtracking(args, frames_iter):
                 np.array(frames_iter)[frame_id_list],
                 output_folder=frames_folder)
         body_model_config = dict(model_path=args.body_model_dir, type='smpl')
-        
-        if args.background=='black':
-            black_imgs = np.zeros((len(os.listdir(frames_folder)), 1920, 1080, 3), dtype = np.uint8)
-            black_imgs = black_imgs*255
-        
-            visualize_smpl_hmr(
-                poses=compressed_poses.reshape(-1, max_instance, 24 * 3),
-                betas=compressed_betas,
-                cam_transl=compressed_cams,
-                bbox=compressed_bboxs,
-                output_path=args.show_path,
-                render_choice=args.render_choice,
-                resolution=frames_iter[0].shape[:2],
-                image_array=black_imgs,
-                body_model_config=body_model_config,
-                overwrite=True,
-                palette=args.palette,
-                read_frames_batch=True)
-        else:
-            visualize_smpl_hmr(
+        visualize_smpl_hmr(
             poses=compressed_poses.reshape(-1, max_instance, 24 * 3),
             betas=compressed_betas,
             cam_transl=compressed_cams,
@@ -619,11 +580,6 @@ if __name__ == '__main__':
         choices=['cpu', 'cuda'],
         default='cuda',
         help='device used for testing')
-    parser.add_argument(
-        '--background',
-        choices=['black', 'image'],
-        default='image',
-        help='Background of the results')
     args = parser.parse_args()
 
     if args.single_person_demo:
